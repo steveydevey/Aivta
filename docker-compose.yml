@@ -1,0 +1,129 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database for game state and path mapping
+  database:
+    image: postgres:15-alpine
+    container_name: aivta-database
+    environment:
+      POSTGRES_DB: aivta
+      POSTGRES_USER: aivta_user
+      POSTGRES_PASSWORD: aivta_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./services/database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U aivta_user -d aivta"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - aivta-network
+
+  # AI Agent service - coordinates between LLM and game
+  ai-agent:
+    build:
+      context: ./services/ai-agent
+      dockerfile: Dockerfile
+    container_name: aivta-ai-agent
+    environment:
+      - DATABASE_URL=postgresql://aivta_user:aivta_password@database:5432/aivta
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - OLLAMA_HOST=${OLLAMA_HOST:-http://ollama:11434}
+      - TEXT_GAME_HOST=text-game
+      - TEXT_GAME_PORT=8080
+      - LOG_LEVEL=INFO
+    ports:
+      - "8000:8000"
+    depends_on:
+      database:
+        condition: service_healthy
+      text-game:
+        condition: service_started
+    volumes:
+      - ./services/ai-agent:/app
+      - ./config:/app/config
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - aivta-network
+
+  # Text-based game service
+  text-game:
+    build:
+      context: ./services/text-game
+      dockerfile: Dockerfile
+    container_name: aivta-text-game
+    environment:
+      - GAME_TYPE=adventure
+      - LOG_LEVEL=INFO
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./services/text-game:/app
+      - game_saves:/app/saves
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - aivta-network
+
+  # Optional: Local LLM service using Ollama
+  ollama:
+    image: ollama/ollama:latest
+    container_name: aivta-ollama
+    environment:
+      - OLLAMA_HOST=0.0.0.0
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    profiles:
+      - local-llm
+    networks:
+      - aivta-network
+
+  # Optional: Web interface for monitoring and debugging
+  web-ui:
+    build:
+      context: ./services/web-ui
+      dockerfile: Dockerfile
+    container_name: aivta-web-ui
+    environment:
+      - AI_AGENT_HOST=ai-agent
+      - AI_AGENT_PORT=8000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - ai-agent
+    volumes:
+      - ./services/web-ui:/app
+    profiles:
+      - monitoring
+    networks:
+      - aivta-network
+
+volumes:
+  postgres_data:
+    driver: local
+  game_saves:
+    driver: local
+  ollama_data:
+    driver: local
+
+networks:
+  aivta-network:
+    driver: bridge
+
+# Environment variables can be set in .env file
+# Example .env file:
+# OPENAI_API_KEY=your_openai_api_key_here
+# OLLAMA_HOST=http://ollama:11434
+# LOG_LEVEL=INFO
