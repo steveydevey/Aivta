@@ -1,0 +1,104 @@
+# Aivta - AI Agent Text Game Research Project
+
+## Project Context
+This is a research project called "Aivta" (AI Avatar) that builds a Docker Compose stack with an AI agent that coordinates input/output mapping between an LLM and a text-based game. The goal is to enable the LLM to play the game to completion and map its path through the game.
+
+## Current Phase: Phase 1 - Foundation Setup
+- Setting up project structure and Docker Compose configuration
+- Creating core service architectures
+- Establishing testing and development infrastructure
+
+## Project Structure
+```
+aivta/
+├── docker-compose.yml          # Main orchestration file
+├── services/
+│   ├── ai-agent/              # AI Agent service (Python/FastAPI)
+│   ├── text-game/             # Text game container
+│   └── database/              # PostgreSQL for game state
+├── tests/                     # Test suites
+├── docs/                      # Project documentation
+├── config/                    # Configuration files
+└── scripts/                   # Utility scripts
+```
+
+## Architecture Overview
+- **AI Agent**: Python-based coordinator using FastAPI
+- **Text Game**: Containerized adventure game (Zork/Adventure)
+- **Database**: PostgreSQL for game state and path mapping
+- **LLM Integration**: OpenAI API or local models (Ollama)
+
+## Development Guidelines
+
+### Code Quality
+- Use Python 3.11+ with type hints
+- Follow PEP 8 style guidelines
+- Use black for code formatting
+- Use mypy for type checking
+- Comprehensive test coverage with pytest
+
+### Docker Best Practices
+- Multi-stage builds for optimization
+- Non-root user containers
+- Proper health checks
+- Environment variable configuration
+- Volume mounts for persistence
+
+### Git Workflow
+- Commit frequently with descriptive messages
+- Use conventional commit format
+- Create feature branches for major changes
+- Update documentation with each commit
+
+### Testing Strategy
+- Unit tests for core logic
+- Integration tests for service communication
+- End-to-end tests for complete workflows
+- Performance tests for LLM interactions
+
+## Key Files to Reference
+- `PROJECT_PLAN.md`: Detailed project roadmap and phases
+- `README.md`: Project overview and setup instructions
+- `docker-compose.yml`: Service orchestration
+- `services/ai-agent/`: Core AI agent implementation
+- `tests/`: Test suites and fixtures
+
+## Common Tasks
+1. **Service Development**: Focus on Python/FastAPI for AI agent
+2. **Game Integration**: Text-based adventure game containerization
+3. **Database Design**: Game state and path mapping schema
+4. **API Design**: RESTful APIs for service communication
+5. **Testing**: Comprehensive test coverage for all components
+
+## Version 2 Goals
+- Comprehensive path mapping for all possible game routes
+- Multi-game support
+- Performance optimization and scalability
+- Research-quality analytics and visualization
+
+## Context for AI Assistant
+When working on this project:
+1. Always reference the current phase objectives
+2. Maintain focus on Docker Compose architecture
+3. Prioritize testing and documentation
+4. Consider scalability and research applications
+5. Keep the LLM integration flexible (API or local models)
+
+## Current Status
+- [x] Project plan created
+- [x] .cursorrules file established
+- [ ] Docker Compose configuration
+- [ ] Basic project structure
+- [ ] Initial AI agent service
+- [ ] Text game containerization
+- [ ] Database setup
+- [ ] Testing framework
+
+## Next Immediate Tasks
+1. Create Docker Compose configuration
+2. Set up basic project directory structure
+3. Initialize AI agent service (Python/FastAPI)
+4. Select and containerize text game
+5. Set up PostgreSQL database
+6. Create initial test framework
+7. Commit all changes to git
