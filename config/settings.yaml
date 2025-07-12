@@ -1,0 +1,92 @@
+# Aivta Configuration File
+# This file contains the main configuration settings for the project
+
+# Application Settings
+app:
+  name: "Aivta"
+  version: "1.0.0"
+  description: "AI Agent Text Game Research Project"
+  debug: false
+
+# Database Settings
+database:
+  host: "database"
+  port: 5432
+  name: "aivta"
+  user: "aivta_user"
+  password: "aivta_password"
+  pool_size: 10
+  max_overflow: 20
+  echo: false
+
+# AI Agent Settings
+ai_agent:
+  host: "0.0.0.0"
+  port: 8000
+  max_sessions: 100
+  session_timeout: 3600
+  log_level: "INFO"
+  
+# Text Game Settings
+text_game:
+  host: "0.0.0.0"
+  port: 8080
+  game_type: "adventure"
+  save_interval: 300
+  max_moves: 1000
+
+# LLM Settings
+llm:
+  provider: "openai"  # openai, ollama, or anthropic
+  model: "gpt-3.5-turbo"
+  temperature: 0.7
+  max_tokens: 1000
+  timeout: 30
+  retry_attempts: 3
+  
+# OpenAI Settings
+openai:
+  api_key: "${OPENAI_API_KEY}"
+  organization: ""
+  base_url: ""
+
+# Ollama Settings
+ollama:
+  host: "http://ollama:11434"
+  model: "llama2"
+  
+# Logging Settings
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file: "logs/aivta.log"
+  rotation: "1 day"
+  retention: "30 days"
+
+# Monitoring Settings
+monitoring:
+  enabled: true
+  metrics_port: 9090
+  health_check_interval: 30
+  
+# Game Research Settings
+research:
+  path_mapping: true
+  state_tracking: true
+  performance_metrics: true
+  exploration_analysis: true
+  
+# Security Settings
+security:
+  secret_key: "${SECRET_KEY}"
+  jwt_secret: "${JWT_SECRET}"
+  cors_origins: ["*"]
+  rate_limiting: true
+  max_requests_per_minute: 100
+
+# Performance Settings
+performance:
+  worker_processes: 4
+  worker_timeout: 30
+  keep_alive: 2
+  max_concurrent_sessions: 50
