@@ -2,7 +2,8 @@
 
 import os
 from typing import Optional
-from pydantic import BaseSettings, Field
+from pydantic_settings import BaseSettings
+from pydantic import Field
 
 
 class Settings(BaseSettings):
@@ -10,29 +11,29 @@ class Settings(BaseSettings):
     
     # Database configuration
     database_url: str = Field(
-        default="postgresql://aivta_user:aivta_password@database:5432/aivta",
-        env="DATABASE_URL"
+        default="postgresql://aivta_user:aivta_password@database:5432/aivta"
     )
     
     # LLM configuration
-    openai_api_key: Optional[str] = Field(default=None, env="OPENAI_API_KEY")
-    ollama_host: str = Field(default="http://ollama:11434", env="OLLAMA_HOST")
-    llm_model: str = Field(default="gpt-3.5-turbo", env="LLM_MODEL")
+    openai_api_key: Optional[str] = Field(default=None)
+    ollama_host: str = Field(default="http://ollama:11434")
+    llm_model: str = Field(default="gpt-3.5-turbo")
     
     # Game configuration
-    text_game_host: str = Field(default="text-game", env="TEXT_GAME_HOST")
-    text_game_port: int = Field(default=8080, env="TEXT_GAME_PORT")
+    text_game_host: str = Field(default="text-game")
+    text_game_port: int = Field(default=8080)
     
     # Agent configuration
-    max_actions_per_game: int = Field(default=1000, env="MAX_ACTIONS_PER_GAME")
-    max_context_length: int = Field(default=4000, env="MAX_CONTEXT_LENGTH")
+    max_actions_per_game: int = Field(default=1000)
+    max_context_length: int = Field(default=4000)
     
     # Logging configuration
-    log_level: str = Field(default="INFO", env="LOG_LEVEL")
+    log_level: str = Field(default="INFO")
     
     # Development settings
-    debug: bool = Field(default=False, env="DEBUG")
+    debug: bool = Field(default=False)
     
-    class Config:
-        env_file = ".env"
-        case_sensitive = False
+    model_config = {
+        "env_file": ".env",
+        "case_sensitive": False
+    }
